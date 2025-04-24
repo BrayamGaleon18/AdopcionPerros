@@ -4,19 +4,25 @@ public class Perro {
   private String raza;
   private int edad;
   private String tamaño;
+    private boolean estado;
+    private boolean adoptado;
+    private Personas dueño;
 
-   public Perro() {
+
+    public Perro() {
+       this.estado = false;
    }
 
-   public Perro(String placa, String nombre, String raza, int edad, String tamaño) {
-      this.placa = placa;
-      this.nombre = nombre;
-      this.raza = raza;
-      this.edad = edad;
-      this.tamaño = tamaño;
-   }
+    public Perro(String placa, String nombre, String raza, int edad, String tamaño, boolean adoptado) {
+        this.placa = placa;
+        this.nombre = nombre;
+        this.raza = raza;
+        this.edad = edad;
+        this.tamaño = tamaño;
+        this.estado = !adoptado;
+    }
 
-   public String getPlaca() {
+    public String getPlaca() {
       return placa;
    }
 
@@ -56,14 +62,39 @@ public class Perro {
       this.tamaño = tamaño;
    }
 
+    public void setAdoptado(boolean adoptado) {
+        this.adoptado = adoptado;
+    }
+
+    public boolean isAdoptado() {
+        return adoptado;
+    }
+    public void adoptar() {
+        this.estado = false;
+    }
+
+    public boolean estado() {
+        return this.estado;
+    }
+    public void setAdoptadoPor(Personas persona) {
+        this.dueño = persona;
+    }
+
+    public Personas getAdoptadoPor() {
+        return dueño;
+    }
+
    @Override
    public String toString() {
-      return "Perro{" +
-              "placa='" + placa + '\'' +
-              ", nombre='" + nombre + '\'' +
-              ", raza='" + raza + '\'' +
-              ", edad=" + edad +
-              ", tamaño='" + tamaño + '\'' +
-              '}';
+      return "Perro Registrados: " +
+              "Placa= " + placa  +
+              ", Nombre= " + nombre  +
+              ", Raza= " + raza  +
+              ", Edad= " + edad +
+              ", Tamaño= " + tamaño
+              ;
    }
+
+
+
 }

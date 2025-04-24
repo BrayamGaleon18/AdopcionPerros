@@ -14,20 +14,22 @@ public class Main {
         int opc, edad, edadP;
         String nombre, apellido, documento;
         String placa, nombreP, raza, tamaño, doc;
-
+        boolean ver= false;
+        boolean disponibles = false;
+        String buscar;
 
         do {
             System.out.println("""
                     
-         System.out.println("\\n--- Menú de Adopción de Perros ---");
-                          1. Registrar persona")       
-                          2. Registrar perro");
-                          3. Ver personas registradas");
-                          4. Ver perros disponibles");
-                          5. Adoptar perro");
-                          6. Consultar perro más viejo adoptado");
-                          7. Salir");
-                          Ingrese una opción: """);
+              --- ADOPTA TU PERRO ---
+         1. Registrar persona      
+         2. Registrar perro
+         3. Ver personas registradas
+         4. Ver perros disponibles
+         5. Adoptar perro
+         6. Consultar perro más viejo adoptado
+         7. Salir
+         Ingrese una opción: """);
 
             opc = teclado.nextInt();
             teclado.nextLine();
@@ -63,8 +65,8 @@ public class Main {
                     System.out.print("Tamaño: ");
                     tamaño = teclado.nextLine();
 
-                    perrosDisponibles.add(new Perro(placa, nombreP, raza, edadP, tamaño));
-                    System.out.println("Perro registrado.");
+                    perrosDisponibles.add(new Perro(placa, nombreP, raza, edadP, tamaño, false));
+                    System.out.println("\nPerro registrado.");
                     break;
                 }
                 case 3 ->{
@@ -78,25 +80,96 @@ public class Main {
                 }
                 case 4 ->{
                     System.out.println("*** PERROS ***");
-                    for(Perro e : perrosDisponibles){
-                        System.out.println(e);
 
+                    for (Perro e : perrosDisponibles) {
+                        if (e.estado()) {
+                            System.out.println(e);
+                            disponibles = true;
+                        }else {
+                            System.out.println("\n**** NO HAY PERROS DISPONIBLES ****");
+                        }
                     }
+
                     break;
                 }
                 case 5 ->{
-                    System.out.println("INGRESE SU DOCUMENTO: ");
-                    doc= teclado.nextLine();
+
+                    System.out.print("INGRESE SU DOCUMENTO: ");
+                    doc = teclado.nextLine();
+
+                    Personas adoptante = null;
+                    for (Personas p : personas) {
+                        if (p.getDocumento().equalsIgnoreCase(doc)) {
+                            adoptante = p;
+                            break;
+                        }
+                    }
+
+                    if (adoptante == null) {
+                        System.out.println("NO ESTA REGISTRADO. POR FAVOR REGISTRESE PRIMERO.");
+                        break;
+                    }
 
 
 
+                    System.out.println("**** PERROS DISPONIBLES ****\n");
+
+                    for (Perro e : perrosDisponibles) {
+                        if (e.estado()) {
+                            System.out.println(e);
+                            disponibles = true;
+                        }else {
+                            System.out.println("\n**** NO HAY PERROS DISPONIBLES ****");
+                        }
+                    }
+
+                    System.out.print("\nINGRESE LA PLACA DEL PERRO: ");
+                    buscar = teclado.nextLine();
+
+                    for (Perro e : perrosDisponibles) {
+                        if (e.getPlaca().equalsIgnoreCase(buscar)) {
+                            if (e.estado()) {
+                                e.adoptar();
+                                e.setAdoptadoPor(adoptante);
+                                System.out.println("\n¡HAZ ADOPTADO A: " + e.getNombre() + " !");
+                            }
+                            ver = true;
+                            break;
+                        }
+                    }
+
+                    if (!ver) {
+                        System.out.println("NO HAY PERROS CON ESTA PLACA.");
+                    }
+                    break;
 
 
                 }
                 case 6 ->{
+                    System.out.println("*** PERROS ADOPTADOS Y SUS DUEÑOS ***");
+                    Perro perroMasViejo = null;
 
+                    for (Perro e : perrosDisponibles) {
+                        if (!e.estado() && e.getAdoptadoPor() != null) {
+                            System.out.println(e + "\nSU DUEÑO ES: " + e.getAdoptadoPor().getNombre() + " " + e.getAdoptadoPor().getApellido() + "\n");
+
+                            if (perroMasViejo == null || e.getEdad() > perroMasViejo.getEdad()) {
+                                perroMasViejo = e;
+                            }
+                        }
+                    }
+
+                    if (perroMasViejo != null) {
+                        System.out.println("*** PERRO MÁS VIEJO ADOPTADO ***");
+                        System.out.println(perroMasViejo + "\nSU DUEÑO ES: " + perroMasViejo.getAdoptadoPor().getNombre());
+                    } else {
+                        System.out.println("NO SE HAN ADOPTADO PERROS.");
+                    }
                 }
             }
+
+
+
         }while(opc!=7);
 
     }
